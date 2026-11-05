@@ -1,0 +1,9 @@
+<Project>
+
+  <PropertyGroup>
+    <Product>Mail Temizleyici</Product>
+    <Description>Local-only desktop tool that analyzes a Gmail mailbox and moves unwanted mail to Trash after your approval.</Description>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+</Project>

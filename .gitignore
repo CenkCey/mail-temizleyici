@@ -1,0 +1,40 @@
+# Build output
+bin/
+obj/
+publish/
+[Pp]ublish*/
+Mail Temizleyici/
+*.lnk
+TestResults/
+*.log
+
+# IDE and local settings
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.rsuser
+
+# Secrets and personal data: never commit
+client_secret*.json
+token*.json
+*.mbox
+*.eml
+*.db
+*.db-*
+*.sqlite*
+veri/
+rapor/
+allowlist.txt
+active_account.txt
+.env
+.env.*
+
+# Private working files (AI assistant setup, session notes, third-party reference images)
+.claude/
+CLAUDE.md
+docs/PROGRESS.md
+docs/SESSION_REPORT.md
+docs/reference*.png
+OZEL_RAPOR/

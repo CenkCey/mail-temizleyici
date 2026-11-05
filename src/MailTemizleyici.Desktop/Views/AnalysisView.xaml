@@ -1,0 +1,114 @@
+<UserControl x:Class="MailTemizleyici.Desktop.Views.AnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Style="{DynamicResource FadeIn}"
+             xmlns:core="clr-namespace:MailTemizleyici.Core;assembly=MailTemizleyici.Core">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}" Content="Analizi çalıştır"
+                        Command="{Binding RunCommand}"
+                        AutomationProperties.Name="Veritabanındaki başlıkları analiz et ve gönderen gruplarını oluştur"/>
+                <TextBlock Style="{StaticResource PageTitle}" Text="Analiz"/>
+            </DockPanel>
+            <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Margin="0,8,0,0"/>
+
+        </StackPanel>
+        <StackPanel Grid.Row="1" Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}">
+                <UniformGrid Rows="1" Margin="0,16,-12,0">
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Muted}" Text="Toplam mail"/>
+                            <TextBlock Style="{StaticResource StatValue}" Text="{Binding TotalMails}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Muted}" Text="Gönderen"/>
+                            <TextBlock Style="{StaticResource StatValue}" Text="{Binding TotalSenders}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Muted}" Text="Toplam boyut"/>
+                            <TextBlock Style="{StaticResource StatValue}" Text="{Binding TotalSize}"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <ItemsControl ItemsSource="{Binding Cards}" Margin="0,12,-12,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Label}" Style="{StaticResource SectionTitle}" x:Name="Title"/>
+                                    <TextBlock Text="{Binding Senders, StringFormat='{}{0} gönderen'}" Margin="0,8,0,0"/>
+                                    <TextBlock Text="{Binding Mails, StringFormat='{}{0} mail'}"/>
+                                    <TextBlock Text="{Binding Size}" Style="{StaticResource Muted}"/>
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Decision}" Value="{x:Static core:Decision.Keep}">
+                                    <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource KeepBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Decision}" Value="{x:Static core:Decision.Trash}">
+                                    <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource TrashBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Decision}" Value="{x:Static core:Decision.Undecided}">
+                                    <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource UndecidedBrush}"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+        </StackPanel>
+        <UniformGrid Grid.Row="2" Rows="1" Margin="0,16,0,0"
+                     Visibility="{Binding HasData, Converter={StaticResource BoolToVis}}">
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                    <StackPanel>
+                        <TextBlock Text="BOYUTA GÖRE EN BÜYÜK 10 GÖNDEREN" Style="{StaticResource SectionLabel}"/>
+                        <DataGrid Margin="0,8,0,0" ItemsSource="{Binding TopBySize}"
+                                  AutomationProperties.Name="Boyuta göre en büyük gönderenler">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Gönderen" Binding="{Binding Address}" Width="*"
+                                                    ElementStyle="{StaticResource TrimCell}"/>
+                                <DataGridTextColumn Header="Mail" Binding="{Binding Mails}"
+                                                    ElementStyle="{StaticResource NumberCell}"/>
+                                <DataGridTextColumn Header="Boyut" Binding="{Binding Size}"
+                                                    ElementStyle="{StaticResource NumberCell}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="MAİL SAYISINA GÖRE EN SIK 10 GÖNDEREN" Style="{StaticResource SectionLabel}"/>
+                        <DataGrid Margin="0,8,0,0" ItemsSource="{Binding TopByCount}"
+                                  AutomationProperties.Name="Mail sayısına göre en sık gönderenler">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Gönderen" Binding="{Binding Address}" Width="*"
+                                                    ElementStyle="{StaticResource TrimCell}"/>
+                                <DataGridTextColumn Header="Mail" Binding="{Binding Mails}"
+                                                    ElementStyle="{StaticResource NumberCell}"/>
+                                <DataGridTextColumn Header="Boyut" Binding="{Binding Size}"
+                                                    ElementStyle="{StaticResource NumberCell}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    </Border>
+                </UniformGrid>
+    </Grid>
+</UserControl>
